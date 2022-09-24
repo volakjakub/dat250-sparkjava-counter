@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: DAT250 - Lab 4
+  description: |-
+    This file describes implemented API in DAT250 assignment 4.
+  version: 1.0.
+servers:
+  - url: https://localhost:8080/
+tags:
+  - name: todo
+    description: Everything about your Todos
+paths:
+  /todos:
+    get:
+      tags:
+        - todo
+      summary: Get a list of todos
+      description: Get a list of todos
+      operationId: getTodos
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todos'
+    post:
+      tags:
+        - todo
+      summary: Create a todo
+      description: Create a todo
+      operationId: createTodo
+      requestBody:
+        description: Create a todo in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTodo'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+  /todos/{id}:
+    get:
+      tags:
+        - todo
+      summary: Get an existing todo
+      description: Get an existing todo by Id
+      operationId: getTodo
+      parameters:
+        - name: id
+          in: path
+          description: ID of todo to get
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - todo
+      summary: Update an existing todo
+      description: Update an existing todo by Id
+      operationId: updateTodo
+      parameters:
+        - name: id
+          in: path
+          description: ID of todo to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update an existent todo in the system
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - todo
+      summary: Delete an existing todo
+      description: Delete an existing todo by Id
+      operationId: deleteTodo
+      parameters:
+        - name: id
+          in: path
+          description: ID of todo to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    NewTodo:
+      required:
+        - summary
+        - description
+      type: object
+      properties:
+        summary:
+          type: string
+          example: homework
+        description:
+          type: string
+          example: This is homework.
+    Todo:
+      required:
+        - summary
+        - description
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        summary:
+          type: string
+          example: homework
+        description:
+          type: string
+          example: This is homework.
+    Todos:
+      type: array
+      items:
+        $ref: '#/components/schemas/Todo'
+    Error:
+      type: string
+      example: Something went wrong!
+  
